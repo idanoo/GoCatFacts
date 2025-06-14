@@ -28,7 +28,7 @@ func main() {
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, getRandomFact())
+		io.WriteString(w, getRandomFact()+"\n")
 	})
 	err = http.ListenAndServe(":"+port, nil)
 	if err != nil {
