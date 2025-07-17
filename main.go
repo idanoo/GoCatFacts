@@ -2,16 +2,17 @@ package main
 
 import (
 	"bufio"
+	"crypto/rand"
 	"io"
 	"log"
-	"math/rand"
+	"math/big"
 	"net/http"
 	"os"
 )
 
 var (
 	port  = "8080"
-	facts = []string{}
+	facts = map[int64]string{}
 )
 
 func main() {
@@ -30,6 +31,7 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		io.WriteString(w, getRandomFact()+"\n")
 	})
+
 	err = http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		log.Fatalf("Error loading facts: %v", err)
@@ -45,10 +47,13 @@ func loadFacts() error {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
+	i := 0
 	for scanner.Scan() {
-		facts = append(facts, scanner.Text())
+		facts[int64(i)] = scanner.Text()
+		i++
 	}
 
+	log.Println("Loaded", len(facts), "cat facts")
 	return scanner.Err()
 }
 
@@ -58,5 +63,7 @@ func getRandomFact() string {
 		return "No facts available."
 	}
 
-	return facts[rand.Intn(len(facts))]
+	counter := int64(len(facts) - 1)
+	n, _ := rand.Int(rand.Reader, big.NewInt(counter))
+	return facts[n.Int64()]
 }
