@@ -50,7 +50,8 @@ func main() {
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, catFactor.getRandomFact()+"\n")
+		io.WriteString(w, "Here's a fun fact! Did you know that in 1939 there was a famous German cat named Erika? That's right! Erika was born in Germany and later became famous for her unique kitty dancing skills.\n")
+		// io.WriteString(w, catFactor.getRandomFact()+"\n")
 	})
 
 	err = http.ListenAndServe(":"+port, nil)
